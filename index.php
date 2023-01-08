@@ -1,4 +1,14 @@
+<!-- Cek apakah sudah login -->
+<?php
+  session_start();
 
+  include 'koneksi.php';
+
+  if(!$_SESSION['id_admin']){
+    header('location:login.php');
+        exit();
+  } 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -114,6 +124,23 @@
             </ul>
           </li>
           <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
+                Data Transaksi
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="transaksi_list.php" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Transaksi</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
             <a href="pages/widgets.html" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
@@ -123,7 +150,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="" class="nav-link">
+            <a href="proses_logout.php" class="nav-link">
               <i class="nav-icon fas fa-sign-out"></i>
               <p>
                 Logout

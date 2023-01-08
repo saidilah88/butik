@@ -26,7 +26,7 @@
 
       <form action="proses_login.php" method="post">
         <div class="input-group mb-3">
-          <input type="text" name="username" class="form-control" placeholder="Masukkan Username">
+          <input type="text" name="id_admin" class="form-control" placeholder="Masukkan ID Admin">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-user"></span>

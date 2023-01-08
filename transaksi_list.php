@@ -9,8 +9,9 @@
         exit();
   } 
 ?>
+
 <!DOCTYPE html>
-<html lang="koneksi.php">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -171,12 +172,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Data Master</h1>
+            <h1 class="m-0">Data Transaksi</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item">Data Master</li>
-              <li class="breadcrumb-item active">Edit Data Pelanggan</li>
+              <li class="breadcrumb-item">Data Transaksi</li>
+              <li class="breadcrumb-item active">Data Transaksi</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -201,54 +202,47 @@
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="fas fa-list mr-1"></i>
-                  Edit Data Pelanggan
+                  Data Transaksi
                 </h3>
                 <div class="card-tools">
+                <a href="add_transaksi_form.php" class="btn btn-primary">
+                  <i class="fas fa-plus mr-1"></i>Tambah
+                  </a>
                 </div>
               </div><!-- /.card-header -->
               <div class="card-body">
-				<!--Memunculkan Data yang mau di edit -->
-				<?php
-				  $id=$_GET['id_pelanggan'];
-				  $query=$koneksi->query("SELECT * FROM pelanggan
-					WHERE id_pelanggan=$id");
-				  $data=$query->fetch_assoc();
-				?>
-			  <form method="POST" action="edit_pelanggan_action.php">
-				<div class="form-grup">
-					<label> Nama Pelanggan</label>
-					<input type="hidden" name="id_pelanggan"
-						value="<?php echo $data['id_pelanggan']?>">
-					<input type="text" name="nama_pelanggan"
-						class="form-control"
-						value="<?php echo $data['nama_pelanggan']?>">
-				</div>
-				<div class="form-grup">
-					<label> No Hp Pelanggan</label>
-					<input type="no_hp_pelanggan" name="no_hp_pelanggan"
-						class="form-control"
-						value="<?php echo $data['no_hp_pelanggan']?>">
-				</div>
-				<div class="form-grup">
-					<label> JK</label>
-					<input type="jk" name="jk"
-						class="form-control"
-						value="<?php echo $data['jk']?>">
-				</div>
-				<div class="form-grup">
-					<label> Alamat Pelanggan</label>
-					<input type="alamat_pelanggan" name="alamat_pelanggan"
-						class="form-control"
-						value="<?php echo $data['alamat_pelanggan']?>">
-				</div>
-				<div class="form-grup">
-					<input type="submit" class="btn btn-primary"
-						value="Simpan">
-					<a href="admin_list.php" class="btn btn-danger">
-						Kembali
-					</a>
-				</div>
-			  </form>
+                <table class="table table-bordered table-hover">
+                  <tr>
+                    <th>No.</th>
+                    <th>ID Transaksi</th>
+                    <th>Tanggal</th>
+                    <th>Pelanggan</th>
+                    <th>Admin</th>
+                    <th>Total</th>
+                    <th>Aksi</th>
+                  </tr>
+                  <?php
+                    //menulis query mengambil data
+                    $no = 1;
+                    $q = $koneksi->query("SELECT * FROM transaksi, pelanggan, admin 
+                      WHERE transaksi.id_pelanggan = pelanggan.id_pelanggan 
+                      AND transaksi.id_admin = admin.id_admin");
+                    while($data = $q->fetch_assoc()){ ?>
+                      <tr>
+                        <td><?php echo $no++; ?></td>
+                        <td><?php echo $data['id_transaksi'] ?></td>
+                        <td><?php echo $data['tanggal'] ?></td>
+                        <td><?php echo $data['nama_pelanggan'] ?></td>
+                        <td><?php echo $data['nama_admin'] ?></td>
+                        <td><?php echo $data['total'] ?></td>
+                        <td>
+                        <a href="detail_transaksi_form.php?id_transaksi=<?php echo $data['id_transaksi']?>" class="btn btn-sm btn-info">
+                            <i class="fas fa-eye mr-1"></i>Detail</a>
+                    </td>
+
+                      </tr>   
+                   <?php } ?>
+                </table>
               </div>
             </div>
             <!-- /.card -->
