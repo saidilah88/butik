@@ -2,7 +2,7 @@
 include "koneksi.php";
 
 //menerima data dari method POST
-$nama = $_POST['id_admin'];
+$id= $_POST['id_admin'];
 $nama = $_POST['nama_admin'];
 $psw = $_POST['password'];
 

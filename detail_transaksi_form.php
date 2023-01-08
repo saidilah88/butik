@@ -9,8 +9,9 @@
         exit();
   } 
 ?>
+
 <!DOCTYPE html>
-<html lang="koneksi.php">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -171,12 +172,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Data Master</h1>
+            <h1 class="m-0">Data Transaksi</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item">Data Master</li>
-              <li class="breadcrumb-item active">Edit Data Pelanggan</li>
+              <li class="breadcrumb-item">Data Transaksi</li>
+              <li class="breadcrumb-item active">Input Detail Transaksi</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -201,54 +202,100 @@
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="fas fa-list mr-1"></i>
-                  Edit Data Pelanggan
+                  Detail Transaksi
                 </h3>
                 <div class="card-tools">
                 </div>
               </div><!-- /.card-header -->
               <div class="card-body">
-				<!--Memunculkan Data yang mau di edit -->
-				<?php
-				  $id=$_GET['id_pelanggan'];
-				  $query=$koneksi->query("SELECT * FROM pelanggan
-					WHERE id_pelanggan=$id");
-				  $data=$query->fetch_assoc();
-				?>
-			  <form method="POST" action="edit_pelanggan_action.php">
-				<div class="form-grup">
-					<label> Nama Pelanggan</label>
-					<input type="hidden" name="id_pelanggan"
-						value="<?php echo $data['id_pelanggan']?>">
-					<input type="text" name="nama_pelanggan"
-						class="form-control"
-						value="<?php echo $data['nama_pelanggan']?>">
-				</div>
-				<div class="form-grup">
-					<label> No Hp Pelanggan</label>
-					<input type="no_hp_pelanggan" name="no_hp_pelanggan"
-						class="form-control"
-						value="<?php echo $data['no_hp_pelanggan']?>">
-				</div>
-				<div class="form-grup">
-					<label> JK</label>
-					<input type="jk" name="jk"
-						class="form-control"
-						value="<?php echo $data['jk']?>">
-				</div>
-				<div class="form-grup">
-					<label> Alamat Pelanggan</label>
-					<input type="alamat_pelanggan" name="alamat_pelanggan"
-						class="form-control"
-						value="<?php echo $data['alamat_pelanggan']?>">
-				</div>
-				<div class="form-grup">
-					<input type="submit" class="btn btn-primary"
-						value="Simpan">
-					<a href="admin_list.php" class="btn btn-danger">
-						Kembali
-					</a>
-				</div>
-			  </form>
+                <?php
+                  $id = $_GET['id_transaksi'];
+                  $q = $koneksi->query("SELECT * FROM transaksi, pelanggan, admin 
+                    WHERE transaksi.id_pelanggan = pelanggan.id_pelanggan
+                    AND transaksi.id_admin = admin.id_admin
+                    AND id_transaksi = $id");
+                  $data = $q->fetch_assoc();
+                ?>
+                <table class="table">
+                  <tr>
+                    <th>Tanggal</th>
+                    <td><?php echo $data['tanggal'] ?></td>
+                  </tr>
+                  <tr>
+                    <th>Pelanggan</th>
+                    <td><?php echo $data['nama_pelanggan'] ?></td>
+                  </tr>
+                  <tr>
+                    <th>Admin</th>
+                    <td><?php echo $data['nama_admin'] ?></td>
+                  </tr>
+                  <tr>
+                    <th>Total</th>
+                    <td><?php echo $data['total'] ?></td>
+                  </tr>
+                </table>
+              </div>
+
+              <div class="card-body">
+                <table class="table">
+                  <tr>
+                    <th>No.</th>
+                    <th>Menu</th>
+                    <th>Qty</th>
+                    <th>Harga</th>
+                    <th>Aksi</th>
+                  </tr>
+              <form method ="POST" action="add_detail_action.php">
+                <?php
+                  $no = 1;
+                  $id = $_GET['id_transaksi'];
+                  $q = $koneksi->query("SELECT * FROM transaksi, detail_transaksi, produk 
+                    WHERE transaksi.id_transaksi = detail_transaksi.id_transaksi
+                    AND produk.id_produk = detail_transaksi.id_produk 
+                    AND detail_transaksi.id_transaksi = $id");
+                  while($data = $q->fetch_assoc()){ ?>
+                    <tr>
+                      <td><?php echo $no++; ?></td>
+                      <td><?php echo $data['nama_produk']; ?></td>
+                      <td><?php echo $data['jumlah']; ?></td>
+                      <td><?php echo $data['harga']; ?></td>
+                      <td>
+                        <a href="delete_detail_action.php?id_transaksi=<?= $data['id_transaksi'] ?>&id_produk=<?= $data['id_produk']?>"
+                        class="btn btn-sm btn-danger" onclick="return confirm('Anda Yakin?')">
+                        <i class="fas fa-trash mr-1"></i></a>
+                      </td>
+                    </tr>
+                <?php } ?>
+                  <tr>
+                      <td colspan="2">
+                        <input type="hidden" name="id_transaksi" value="<?php echo $id; ?>">
+                        <select name="id_produk" class="form-control">
+                        <?php
+                          $q = $koneksi->query("SELECT * FROM produk");
+                          while($m = $q->fetch_assoc()){ ?>
+                          <option value="<?php echo $m['id_produk'] ?>">
+                            <?php echo $m['nama_produk'] ?>
+                          </option>
+                        <?php } ?>
+                        </select>
+                      </td>
+                      <td>
+                        <input type="number" name="jumlah" class="form-control">
+                      </td>
+                      <td>
+                        <input type="number" name="harga" class="form-control">
+                      </td>
+                      <td>
+                        <input type="submit" class="btn btn-sm btn-success" value="+">
+                      </td>
+                    </tr>
+                </table>
+              <div class="form-group">
+                    <a href="transaksi_list.php" class="btn btn-danger">
+                        Kembali
+                    </a>
+                    </div>
+              </form>
               </div>
             </div>
             <!-- /.card -->

@@ -1,5 +1,13 @@
-<?php 
-include "koneksi.php";
+<!-- Cek apakah sudah login -->
+<?php
+  session_start();
+
+  include 'koneksi.php';
+
+  if(!$_SESSION['id_admin']){
+    header('location:login.php');
+        exit();
+  } 
 ?>
 <!DOCTYPE html>
 <html lang="koneksi.php">
@@ -78,16 +86,16 @@ include "koneksi.php";
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-          <li class="nav-item">
-            <a href="index.php" class="nav-link">
+               <li class="nav-item active">
+            <a href="" class="nav-link active">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Dashboard
               </p>
             </a>
           </li>
-          <li class="nav-item menu-open active">
-            <a href="#" class="nav-link active">
+          <li class="nav-item">
+            <a href="#" class="nav-link">
               <i class="nav-icon fas fa-copy"></i>
               <p>
                 Data Master
@@ -95,8 +103,8 @@ include "koneksi.php";
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item active">
-                <a href="admin_list.php" class="nav-link active">
+              <li class="nav-item">
+                <a href="admin_list.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Data Admin</p>
                 </a>
@@ -116,11 +124,36 @@ include "koneksi.php";
             </ul>
           </li>
           <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-copy"></i>
+              <p>
+                Data Transaksi
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="transaksi_list.php" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Transaksi</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
             <a href="pages/widgets.html" class="nav-link">
               <i class="nav-icon fas fa-th"></i>
               <p>
                 Widgets
                 <span class="right badge badge-danger">New</span>
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="proses_logout.php" class="nav-link">
+              <i class="nav-icon fas fa-sign-out"></i>
+              <p>
+                Logout
               </p>
             </a>
           </li>
@@ -181,7 +214,7 @@ include "koneksi.php";
                 WHERE id_admin=$id");
                 $data = $query->fetch_assoc();
                 ?>
-			  <form method="POST" action="add_admin_action.php">
+			  <form method="POST" action="edit_admin_action.php">
 				<div class="form-grup">
 					<label> Nama Admin</label>
 					<input type="hidden" name="id_admin"
@@ -194,7 +227,6 @@ include "koneksi.php";
 					<label> Password</label>
 					<input type="password" name="password"
 						class="form-control"
-            class="form-control"
             value="<?php echo $data['nama_admin']?>">
 				</div>
 				<div class="form-grup">
